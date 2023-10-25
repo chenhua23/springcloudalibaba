@@ -1,0 +1,4 @@
+## arthas常用过滤，筛选命令：
+  watch com.huawei.ict.nbi.kafka.producer.ADCKafkaProducer sendDataToKafka "{params,returnObj}" "params[0].equals('topic') && params[2].indexOf('usernumber')==-1" -x 3
+  getstatic com.huawei.ict.nbi.alarm.restful.platform.heartbeat.impl.HeartBeatCkolaServiceImpl isSendHeartBeat
+  ognl '@java.lang.System@getProperty("NBI_SCALE")' -X 1
