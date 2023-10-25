@@ -48,9 +48,36 @@ jar cvf0M  report-manage-service.jar .
 find -name "vhosts"
 /usr/local/NSP/sbin/nginx -s reload
 
-jvm参数设置相关
+## jvm参数设置相关
 ADC_JVM_CUSTOM_SCALE="-Xms5600m -Xmx5600m -Xmn4000m -XX:MetaspaceSize=250m -XX:MaxMetaspaceSize=250m -XX:MaxDirectMemorySize=500m -XX:SurvivorRatio=16"
 
+## 不使用arthas的cup 100%排查：
+arthas 火焰图
+profiler start
+...
+profiler stop
+输出文件所在的位置，生成svg文件，可以直接使用浏览器打开
+最后使用浏览器查看
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+原生命令：
+1. 使用top查看是否是java程序引起的，获取到pid
+2. ps -mp pid -o THREAD,tid,time  查看当前java进程的线程信息
+3. 找到线程id，是十进制的的，但是java开发中调试的信息都是16进制，需要转换
+4. printf "%x\n" 线程id，输出16进制的线程id
+5. jstack 进程id | grep 16进制线程id -A100 
+6. 完整堆栈列表
+
+## 不使用arthas的oom排查：
+1. 连接到环境（linux），使用jps命令查看java应用
+2. 使用jstat -gcutil pid 1000 10  1秒钟展示一次，总共产生10次。查看当前pid占用了哪些空间，到底是哪块快满了？
+S0 S2 E O M   FGC 分别代表survivor区，eden区，老年带内存占比，以及Full GC次数
+3. 使用arthas分析 dashboard命令查看各种指标
+4. 使用heapdump /tmp/dump-1.hprof 导出内存快照到/tmp/dump-1.hprof文件中，底层就是使用jdk的jmap -dump命令导出的
+5.下载dump文件，使用visualVM打开下载的文件
+6. 分析对象数据，查看对象最多的，点击右键，选择open in new tab；
+7. 后点击右侧的GC Root，查看对象来源。
+8. 在最后的类点击Select in Thread 分析代码
+也可以使用jprofiler分析
 
 
 
