@@ -2,3 +2,11 @@
   watch com.huawei.ict.nbi.kafka.producer.ADCKafkaProducer sendDataToKafka "{params,returnObj}" "params[0].equals('topic') && params[2].indexOf('usernumber')==-1" -x 3
   getstatic com.huawei.ict.nbi.alarm.restful.platform.heartbeat.impl.HeartBeatCkolaServiceImpl isSendHeartBeat
   ognl '@java.lang.System@getProperty("NBI_SCALE")' -X 1
+## 远程debug调试：
+1.进入docker容器，在/opt/mateinfo/app/bin/catalina.sh中添加以下参数：
+JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=9689,server=y,suspend=n"
+netstat -anp | grep "9689"
+查找容器ip：172.18.1.79
+2.在容器宿主机执行以下命令：
+iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 9689 -j DNAT --to-destination 172.18.1.141:9689
+3.在idea中配置remote debug：
