@@ -2,6 +2,7 @@
   watch com.huawei.ict.nbi.kafka.producer.ADCKafkaProducer sendDataToKafka "{params,returnObj}" "params[0].equals('topic') && params[2].indexOf('usernumber')==-1" -x 3
   getstatic com.huawei.ict.nbi.alarm.restful.platform.heartbeat.impl.HeartBeatCkolaServiceImpl isSendHeartBeat
   ognl '@java.lang.System@getProperty("NBI_SCALE")' -X 1
+
 ## 远程debug调试：
 1.进入docker容器，在/opt/mateinfo/app/bin/catalina.sh中添加以下参数：
 JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=9689,server=y,suspend=n"
@@ -10,3 +11,53 @@ netstat -anp | grep "9689"
 2.在容器宿主机执行以下命令：
 iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 9689 -j DNAT --to-destination 172.18.1.141:9689
 3.在idea中配置remote debug：
+
+## 证书生成，转换命令：
+# curl下载证书
+openssl s_client -showcerts -connect {HOSTNAME}:{PORT} </dev/null 2>/dev/null|openssl x509 -outform PEM >mycertfile.pem
+# pem转cert
+openssl x509 -in mycertfile.pem -outform der -out lb.cer 
+
+## linux环境调试接口curl命令：
+curl -k -X PUT https://192.168.0.30:26335/rest/plat/smapp/v1/oauth/token -H 'Cache-Control: no-cache' -H 'Content-Type: application/json' -d '{"grantType": "password", "userName": "22338177-eb92-4430-b78b-4cff7502bf82", "value": "ce51dfdbc4df56e57fc663ee04ca0f8d" }'
+curl -k -X POST https://192.168.0.30:26335/rest/iesalarmadapterrouterservice/v1/om/maccrt/app/api/ict_alarm_interface/queryHistoryAlarmList -H 'Cache-Control: no-cache' -H 'Content-Type: application/json' -H 'x-auth-token: fae46ed4f4386ad4ac1a95a58420bfd3' -d '{"fields": ["alarmname", "alarmid"],"condition": [],"expression": "","sortCondition": {"lastoccurrence": "0"},"start": 0,"limit": 10}'
+curl -H "Content-type: application/json" -X POST -d '{"grant_type":"client_credentials","client_id":"","client_secret":""}' https://8.9.113.164:8091/nbi-report-restful/rest/alarm/report1 --cacert /etc/nginx/ssl/tls.crt -v
+curl -k -v -u "accessinner:BK3l0c36lF3PkL1x" https://localhost:17138/trustStore
+
+##k8s&&容器操作相关命令：
+以指定用户登录docker容器：
+docker exec -it -u root --privileged 容器id bash
+docker exec -it $(docker ps|grep -v pause|grep nbi-alarm|awk '{print $1}') bash
+docker cp /home/paas/swagger-annotations-1.6.2.jar 079f7ffc2a38:/opt/mateinfo/app/webapps/nbi-alarm-restful/WEB-INF/lib/
+kubectl scale deployment alarmnotification-service --replicas=5 -n kube-system
+kubectl get deploy -n kube-system -owide | grep iesalarmada
+kubectl get pod -n kube-system -owide | grep iesalarmada
+kubectl get job -n kube-system -owide | grep iesalarmada
+kubectl describe pod pre-install-iesalarmadapterrouterservice -n kube-system
+netstat -antp | grep 8090
+
+## 查找哪个微服务jar包中含有引号内的类：
+find ./ -name '*.jar' | xargs grep "org.apache.commons.pool2.impl.GenericObjectPoolConfig"
+
+## javac编译：
+javac -g -parameters -encoding utf-8 -classpath .;./class/*;./lib/* Demo.java  
+## 重新压缩：
+jar cvf0M  report-manage-service.jar .
+
+## nginx相关：
+find -name "vhosts"
+/usr/local/NSP/sbin/nginx -s reload
+
+jvm参数设置相关
+ADC_JVM_CUSTOM_SCALE="-Xms5600m -Xmx5600m -Xmn4000m -XX:MetaspaceSize=250m -XX:MaxMetaspaceSize=250m -XX:MaxDirectMemorySize=500m -XX:SurvivorRatio=16"
+
+
+
+
+
+
+
+
+
+
+
