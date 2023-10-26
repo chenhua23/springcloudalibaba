@@ -25,11 +25,13 @@ curl -H "Content-type: application/json" -X POST -d '{"grant_type":"client_crede
 curl -k -v -u "accessinner:BK3l0c36lF3PkL1x" https://localhost:17138/trustStore
 
 ##k8s&&容器操作相关命令：
+https://kubernetes.io/zh-cn/docs/reference/kubectl/cheatsheet/
 以指定用户登录docker容器：
 docker exec -it -u root --privileged 容器id bash
 docker exec -it $(docker ps|grep -v pause|grep nbi-alarm|awk '{print $1}') bash
 docker cp /home/paas/swagger-annotations-1.6.2.jar 079f7ffc2a38:/opt/mateinfo/app/webapps/nbi-alarm-restful/WEB-INF/lib/
 kubectl scale deployment alarmnotification-service --replicas=5 -n kube-system
+kubectl 
 kubectl get deploy -n kube-system -owide | grep iesalarmada
 kubectl get pod -n kube-system -owide | grep iesalarmada
 kubectl get job -n kube-system -owide | grep iesalarmada
