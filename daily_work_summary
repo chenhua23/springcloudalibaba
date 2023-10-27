@@ -83,9 +83,10 @@ S0 S2 E O M   FGC 分别代表survivor区，eden区，老年带内存占比，�
 ***********************java 线上问题处理可以参照：https://blog.csdn.net/GitChat/article/details/79019454
 
 数据库优化工具：mysql6.5以后内置工具
-optimizer_trace
-
-
+select * from information_schema.optimizer_trace
+其他：可以用来查看当前mysql 是否有压力，都在跑什么语句，当前语句耗时多久了，有没有什么慢 SQL 正在执行之类的
+show processlist / show full processlist
+select * from information_schema.processlist;
 
 
 
