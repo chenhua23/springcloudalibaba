@@ -82,7 +82,8 @@ S0 S2 E O M   FGC 分别代表survivor区，eden区，老年带内存占比，�
 也可以使用jprofiler分析
 ***********************java 线上问题处理可以参照：https://blog.csdn.net/GitChat/article/details/79019454
 
-
+数据库优化工具：mysql6.5以后内置工具
+optimizer_trace
 
 
 
