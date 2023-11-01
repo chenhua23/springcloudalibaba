@@ -1,0 +1,1 @@
+在创建kafka消费的时候，使用带ConsumerRebalanceListener参数的subscribe方法，可以在消费者数量变化的时候自动触发rebanlance机制，将topic关联的分区重新分配。
