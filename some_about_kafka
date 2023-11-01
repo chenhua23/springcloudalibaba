@@ -1,1 +1,2 @@
-在创建kafka消费的时候，使用带ConsumerRebalanceListener参数的subscribe方法，可以在消费者数量变化的时候自动触发rebanlance机制，将topic关联的分区重新分配。
+代码细节：
+1. 在创建kafka消费者的时候，使用带ConsumerRebalanceListener参数的subscribe方法，可以在消费者数量变化（比如在线上水平扩容的时候，可以动态增加节点数量）的时候自动触发rebanlance机制，将topic关联的分区重新分配。
