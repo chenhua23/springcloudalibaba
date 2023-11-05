@@ -11,4 +11,38 @@
 自定义 TCP	
 目的:80/80
 源:0.0.0.0/0
+docker基本:
+1.去docker hub，找到nginx镜像
+docker pull nginx  #下载最新版
+镜像名:版本名（标签）
+docker pull nginx:1.20.1
+docker pull redis  #下载最新
+docker pull redis:6.2.4
+## 下载来的镜像都在本地
+docker images  #查看所有镜像
+redis = redis:latest
+docker rmi 镜像名:版本号/镜像id
+2.启动容器
+docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+【docker run  设置项   镜像名  】 镜像启动运行的命令（镜像里面默认有的，一般不会写）
+# -d：后台运行
+# --restart=always: 开机自启
+docker run --name=mynginx   -d  --restart=always -p  88:80   nginx
 
+# 查看正在运行的容器
+docker ps
+# 查看所有
+docker ps -a
+# 删除停止的容器
+docker rm  容器id/名字
+docker rm -f mynginx   #强制删除正在运行中的
+
+#停止容器
+docker stop 容器id/名字
+#再次启动
+docker start 容器id/名字
+
+#应用开机自启
+docker update 容器id/名字 --restart=always
+
+3. 
