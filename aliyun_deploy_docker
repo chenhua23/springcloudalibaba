@@ -63,3 +63,32 @@ nginx
 docker cp 5eff66eec7e1:/etc/nginx/nginx.conf  /data/conf/nginx.conf
 #把外面的内容复制到容器里面
 docker cp  /data/conf/nginx.conf  5eff66eec7e1:/etc/nginx/nginx.conf
+
+3.
+kubesphere(相当于java的spring框架,kubesphere相当于k8s的spring)安装mysql：
+mysql/redis安装失败:cni create failed
+1）.去掉资源限制
+2）.注意镜像版本
+3）.配置文件权限为读写
+3.数据挂载为只读权限
+**使用kubectl top nodes查看每个节点的资源
+**使用kubectl describe node ** -n namespace查看pod启动报错
+**使用kubectl get pod -A 查看所有pod的启动状态
+**使用kubectl apply -f xx.yaml部署应用
+**使用kubectl delete -f xx.yaml删掉部署
+**使用kubectl logs查看容器启动日志
+**使用kubectl create svc 创建资源
+**使用kubectl edit -f filename | pod xxx  编辑pod
+**使用kubectl scale --replicas=3 rc/foo  修改副本数等
+**报容器挂载目录权限不足，容器还未启动，需要修改挂载到宿主机上的目录权限
+
+
+
+
+
+
+
+
+
+
+
