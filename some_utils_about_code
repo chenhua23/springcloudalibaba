@@ -1,1 +1,92 @@
+<dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.0-jre</version>
+    </dependency>
 
+    // 集合元素拼接成string
+    @Test
+    public void testJoiner() {
+        // guava
+        List<String> list = Lists.newArrayList("a", "b", "c", null);
+        Joiner joiner = Joiner.on(",")
+                // .skipNulls();
+                .useForNull("shit");
+        System.out.println(joiner.join(list));
+        // java8
+        System.out.println(list.stream().filter(StringUtils::isNotBlank).collect(Collectors.joining(",")));
+    }
+
+    @Test
+    public void testSplitter() {
+        // 指定
+        String str = "a,\"\", b ,, c";
+        Splitter splitter = Splitter.on(",")
+                // 过滤掉空白的字符,不包括""
+                .omitEmptyStrings();
+        Iterable<String> iterable = splitter.split(str);
+        System.out.println(iterable);
+
+        System.out.println("-------------------------------------");
+
+        splitter = Splitter.on(",")
+                // 去掉每个元素的前后空格
+                .trimResults();
+        System.out.println(splitter.split(str));
+    }
+
+    /**
+     * student_name -->studentName
+     */
+    @Test
+    public void testTrans() {
+        String str = "student_name";
+        // 下划线转驼峰
+        System.out.println(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, str));
+        System.out.println(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, str));
+    }
+
+    /**
+     * test list
+     */
+    @Test
+    public void testList() {
+        List<String> list = Lists.newArrayList("a", "b", "c", "d", "e");
+        // 实际应用场景,传list,每次最多传20个
+        List<List<String>> partition = Lists.partition(list, 2);
+        System.out.println(partition);
+    }
+
+    /**
+     * test number
+     */
+    @Test
+    public void testNumber() {
+        List<Integer> list = Ints.asList(1, 2, 3, 4);
+        // Longs,Floats
+        System.out.println(list);
+    }
+
+    /**
+     * List:有序可重复
+     * Set:无序不可重复
+     * 如果需要:无序可重复:
+     */
+    @Test
+    public void testMultiSet() {
+        Multiset<String> multiset = HashMultiset.create();
+        multiset.add("a");
+        multiset.add("b");
+        multiset.add("c");
+        multiset.add("a");
+        System.out.println(multiset);
+        Set<Multiset.Entry<String>> entries = multiset.entrySet();
+        for (Multiset.Entry<String> entry : entries) {
+            System.out.println("元素: " + entry.getElement() + " 个数: " + entry.getCount());
+        }
+        Set<String> elementSet = multiset.elementSet();
+        System.out.println(elementSet);
+        for (String s : elementSet) {
+            System.out.println("集合中的元素: " + s);
+        }
+    }
